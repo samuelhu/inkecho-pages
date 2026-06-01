@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>遇见汉字 (InkEcho) — 专为儿童设计的智能自适应汉字学习系统</title>
+  <meta name="description" content="遇见汉字 (InkEcho) 是一款专为儿童设计的渐进式汉字与词语学习软件。结合艾宾浩斯自适应记忆引擎、精美原创绘本与手写笔顺交互，让孩子在趣味探险中轻松掌握 3000+ 常用汉字。" />
+  <meta name="keywords" content="遇见汉字,InkEcho,儿童认字,汉字学习,自适应学习,间隔重复,绘本阅读,笔顺手写" />
+  <link rel="icon" type="image/png" href="images/app-icon.png" />
+  
+  <!-- Google Fonts for Elegant Serif and Modern Sans UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Outfit:wght@400;600;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Modern CSS Custom Properties / Theme System */
+    :root {
+      --bg-gradient: radial-gradient(circle at top, #fdfbfa 0%, #f4f0e6 100%);
+      --text-main: #292524;
+      --text-muted: #57534e;
+      --text-light: #78716c;
+      --accent-amber: #d97706;
+      --accent-orange: #ea580c;
+      --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #ea580c 100%);
+      --accent-gradient-hover: linear-gradient(135deg, #fbbf24 0%, #ea580c 100%);
+      --card-bg: rgba(255, 255, 255, 0.75);
+      --card-border: rgba(217, 119, 6, 0.12);
+      --shadow-premium: 0 20px 40px -15px rgba(68, 64, 60, 0.1);
+      --shadow-inset: inset 0 2px 4px 0 rgba(255, 255, 255, 0.8);
+      --border-radius-lg: 24px;
+      --border-radius-xl: 32px;
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Selection Colors */
+    ::selection {
+      background: rgba(217, 119, 6, 0.2);
+      color: var(--accent-orange);
+    }
+
+    /* Typography */
+    h1, h2, h3 {
+      font-family: 'Noto Serif SC', 'Noto Serif CJK SC', serif;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .serif-title {
+      font-family: 'Noto Serif SC', serif;
+    }
+
+    /* Nav Bar */
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px -4px rgba(217, 119, 6, 0.3);
+      object-fit: cover;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-text h2 {
+      font-size: 20px;
+      color: var(--text-main);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .logo-text span {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--accent-amber);
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 14px;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid transparent;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-orange);
+      background: rgba(255, 255, 255, 0.5);
+      border-color: var(--card-border);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 32px 60px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .hero-badge {
+      background: rgba(217, 119, 6, 0.08);
+      border: 1px solid rgba(217, 119, 6, 0.2);
+      color: var(--accent-orange);
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      margin-bottom: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .hero-badge .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-orange);
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.7);
+      animation: pulse-orange 1.8s infinite;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 6vw, 4.5rem);
+      line-height: 1.15;
+      color: var(--text-main);
+      max-width: 900px;
+      margin-bottom: 24px;
+      text-shadow: 0 4px 12px rgba(41, 37, 36, 0.03);
+    }
+
+    .hero h1 span {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+    }
+
+    .hero p.tagline {
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      color: var(--text-muted);
+      max-width: 720px;
+      margin-bottom: 48px;
+      font-weight: 500;
+    }
+
+    /* CTA Button Group */
+    .cta-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 60px;
+      width: 100%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 36px;
+      font-size: 16px;
+      font-weight: 800;
+      border-radius: var(--border-radius-lg);
+      text-decoration: none;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: white;
+      box-shadow: 0 16px 32px -8px rgba(217, 119, 6, 0.35),
+                  inset 0 -4px 0 0 rgba(0, 0, 0, 0.1),
+                  var(--shadow-inset);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-gradient-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px -8px rgba(217, 119, 6, 0.45),
+                  inset 0 -4px 0 0 rgba(0, 0, 0, 0.1),
+                  var(--shadow-inset);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 8px 16px -4px rgba(217, 119, 6, 0.3),
+                  inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    /* Shine effect animation on primary button */
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: skewX(-25deg);
+      transition: 0.75s;
+      opacity: 0;
+    }
+
+    .btn-primary:hover::after {
+      left: 125%;
+      opacity: 1;
+      transition: 0.75s ease-in-out;
+    }
+
+    /* iOS Status CTA Badge */
+    .btn-ios-pending {
+      background: #1c1917;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      cursor: default;
+      padding: 14px 28px;
+      box-shadow: 0 16px 32px -8px rgba(28, 25, 23, 0.25);
+    }
+
+    .btn-ios-pending:hover {
+      background: #272422;
+    }
+
+    .btn-ios-pending .store-badge-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .btn-ios-pending .store-badge-subtitle {
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-ios-pending .store-badge-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: white;
+      margin-top: 1px;
+    }
+
+    .btn-ios-pending .status-pill {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fbbf24;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-left: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      align-self: center;
+    }
+
+    .btn-ios-pending .status-pill .pulse-dot-amber {
+      width: 6px;
+      height: 6px;
+      background-color: #fbbf24;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+      animation: pulse-amber 1.8s infinite;
+    }
+
+    /* Metrics Summary Section */
+    .metrics-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto 80px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 24px;
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-premium), var(--shadow-inset);
+      backdrop-filter: blur(12px);
+      text-align: center;
+      transition: var(--transition-smooth);
+    }
+
+    .metric-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(217, 119, 6, 0.25);
+      box-shadow: 0 25px 50px -20px rgba(217, 119, 6, 0.15);
+    }
+
+    .metric-value {
+      font-size: 32px;
+      font-weight: 800;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .metric-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* Showcase Carousel Container */
+    .showcase-section {
+      width: 100%;
+      max-width: 1060px;
+      margin: 0 auto 100px;
+      padding: 0 32px;
+    }
+
+    .showcase-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .showcase-header h2 {
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .showcase-header p {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .carousel-outer {
+      position: relative;
+      width: 100%;
+      max-width: 360px; /* Centered mobile screen width */
+      margin: 0 auto 32px;
+    }
+
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius-xl);
+      padding: 12px;
+      box-shadow: var(--shadow-premium), var(--shadow-inset);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    .carousel-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border-radius: calc(var(--border-radius-xl) - 12px);
+      aspect-ratio: 9 / 19.5; /* iPhone vertical screen aspect ratio */
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .carousel-track {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .carousel-slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: #faf7f2;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .carousel-caption-container {
+      margin-top: 24px;
+      text-align: center;
+      min-height: 90px;
+      width: 100%;
+      padding: 0 16px;
+    }
+
+    .carousel-caption-item {
+      display: none;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .carousel-caption-item.active {
+      display: block;
+    }
+
+    .carousel-caption-item h3 {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      font-family: 'Noto Serif SC', serif;
+    }
+
+    .carousel-caption-item p {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Carousel Nav Buttons */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(217, 119, 6, 0.15);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      transition: var(--transition-smooth);
+      backdrop-filter: blur(4px);
+    }
+
+    .carousel-btn:hover {
+      background: #fff;
+      color: var(--accent-orange);
+      box-shadow: 0 12px 30px -5px rgba(217, 119, 6, 0.25);
+      border-color: rgba(217, 119, 6, 0.3);
+    }
+
+    .carousel-btn-prev {
+      left: -76px;
+    }
+
+    .carousel-btn-next {
+      right: -76px;
+    }
+
+    /* Carousel Dots */
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .carousel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(41, 37, 36, 0.15);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .carousel-dot.active {
+      background: var(--accent-orange);
+      width: 28px;
+      border-radius: 5px;
+    }
+
+    /* Features Grid Section */
+    .features-section {
+      max-width: 1200px;
+      margin: 0 auto 100px;
+      padding: 0 32px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius-lg);
+      padding: 40px 32px;
+      box-shadow: var(--shadow-premium), var(--shadow-inset);
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(217, 119, 6, 0.3);
+      box-shadow: 0 30px 60px -20px rgba(217, 119, 6, 0.12);
+    }
+
+    .feature-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      background: rgba(217, 119, 6, 0.08);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-orange);
+      margin-bottom: 24px;
+      transition: var(--transition-smooth);
+      border: 1px solid rgba(217, 119, 6, 0.12);
+    }
+
+    .feature-card:hover .feature-icon-wrapper {
+      background: var(--accent-gradient);
+      color: white;
+      box-shadow: 0 8px 20px -4px rgba(217, 119, 6, 0.3);
+      border-color: transparent;
+      transform: scale(1.05) rotate(4deg);
+    }
+
+    .feature-card h3 {
+      font-size: 22px;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      font-weight: 800;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    /* Learning Tiers Showroom */
+    .tiers-section {
+      background: rgba(255, 255, 255, 0.35);
+      border-top: 1px solid rgba(217, 119, 6, 0.08);
+      border-bottom: 1px solid rgba(217, 119, 6, 0.08);
+      padding: 100px 32px;
+      width: 100%;
+      margin-bottom: 100px;
+    }
+
+    .tiers-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .tiers-container h2 {
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      margin-bottom: 16px;
+    }
+
+    .tiers-container p.section-desc {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 50px;
+      font-size: 16px;
+    }
+
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+    }
+
+    .tier-card {
+      background: white;
+      border: 2px solid transparent;
+      border-radius: var(--border-radius-xl);
+      padding: 40px;
+      text-align: left;
+      box-shadow: 0 10px 30px rgba(68, 64, 60, 0.05);
+      transition: var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tier-card-basic {
+      border-color: #fcd34d;
+      background: linear-gradient(to bottom, #fffbeb 0%, #ffffff 100%);
+    }
+
+    .tier-card-explore {
+      border-color: #fdba74;
+      background: linear-gradient(to bottom, #fff7ed 0%, #ffffff 100%);
+    }
+
+    .tier-card-leap {
+      border-color: #fca5a5;
+      background: linear-gradient(to bottom, #fef2f2 0%, #ffffff 100%);
+    }
+
+    .tier-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 35px 70px -15px rgba(68, 64, 60, 0.12);
+    }
+
+    .tier-badge {
+      align-self: flex-start;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tier-badge-basic { background: #fef3c7; color: #b45309; }
+    .tier-badge-explore { background: #ffedd5; color: #c2410c; }
+    .tier-badge-leap { background: #fee2e2; color: #b91c1c; }
+
+    .tier-card h3 {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .tier-card .tier-subtitle {
+      font-size: 14px;
+      color: var(--text-light);
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .tier-meta-list {
+      list-style: none;
+      margin-top: auto;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      padding-top: 24px;
+    }
+
+    .tier-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .tier-meta-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .tier-meta-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .tier-meta-item-basic svg { color: #d97706; }
+    .tier-meta-item-explore svg { color: #ea580c; }
+    .tier-meta-item-leap svg { color: #dc2626; }
+
+    /* Footer */
+    footer {
+      background: #1c1917;
+      color: #a8a29e;
+      padding: 48px 32px 40px;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .footer-links-row {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-links-row a {
+      color: #d6d3d1;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 15px;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links-row a:hover {
+      color: var(--accent-amber);
+    }
+
+    .footer-copyright {
+      font-size: 13px;
+      color: #78716c;
+    }
+
+    /* Keyframe Animations */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes pulse-orange {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.4);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(234, 88, 12, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(234, 88, 12, 0);
+      }
+    }
+
+    @keyframes pulse-amber {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(217, 119, 6, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(217, 119, 6, 0);
+      }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      nav {
+        padding: 16px 20px;
+      }
+      .hero {
+        padding: 40px 20px 40px;
+      }
+      .cta-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+      }
+      .btn {
+        width: 100%;
+      }
+      .btn-ios-pending {
+        justify-content: center;
+      }
+      .showcase-section {
+        padding: 0 20px;
+      }
+      .carousel-container {
+        padding: 8px;
+        border-radius: var(--border-radius-lg);
+      }
+      .carousel-wrapper {
+        border-radius: calc(var(--border-radius-lg) - 6px);
+      }
+      .carousel-caption-item h3 {
+        font-size: 18px;
+      }
+      .carousel-caption-item p {
+        font-size: 12px;
+      }
+      .carousel-btn {
+        width: 38px;
+        height: 38px;
+      }
+      .carousel-btn-prev { left: 12px; }
+      .carousel-btn-next { right: 12px; }
+      .features-section {
+        padding: 0 20px;
+      }
+      .tiers-section {
+        padding: 60px 20px;
+      }
+      .tier-card {
+        padding: 24px;
+      }
+      footer {
+        padding: 60px 20px 30px;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo-container">
+      <img src="images/app-icon.png" alt="遇见汉字 App Icon" class="logo-icon" />
+      <div class="logo-text">
+        <h2>遇见汉字</h2>
+        <span>InkEcho</span>
+      </div>
+    </div>
+    <div class="nav-links"></div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="hero-badge">
+      <div class="pulse-dot"></div>
+      自适应 · 渐进式 · 趣读绘本
+    </div>
+    <h1>让孩子在奇妙探险中<br /><span>自然遇见汉字</span></h1>
+    <p class="tagline">遇见汉字 (InkEcho) 是一款专为儿童设计的汉字与词语学习系统。结合艾宾浩斯自适应算法与趣味绘本，将字词融入语境，带孩子开启主动探索的高效认字旅程。</p>
+    
+    <!-- Action buttons -->
+    <div class="cta-container">
+      <div class="btn btn-ios-pending" title="iOS 客户端在 App Store 审核发布中，敬请期待！">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="6" y1="19" x2="15.5" y2="4.5"></line>
+          <line x1="8.5" y1="4.5" x2="18" y2="19"></line>
+          <line x1="4" y1="14.5" x2="20" y2="14.5"></line>
+        </svg>
+        <div class="store-badge-details">
+          <span class="store-badge-subtitle">Download on the</span>
+          <span class="store-badge-title">App Store</span>
+        </div>
+        <div class="status-pill">
+          <div class="pulse-dot-amber"></div>
+          待发布
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Metrics -->
+    <div class="metrics-container">
+      <div class="metric-card">
+        <div class="metric-value">3,000+</div>
+        <div class="metric-label">精选常用汉字</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">3 大关卡</div>
+        <div class="metric-label">循序渐进分级体系</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">SM-2</div>
+        <div class="metric-label">儿童专属记忆算法</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">100%</div>
+        <div class="metric-label">本地安全存储</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Interactive Screenshots Carousel -->
+  <section class="showcase-section">
+    <div class="showcase-header">
+      <h2>应用实机界面预览</h2>
+      <p>清新精致的国风 UI 设计，符合儿童操作直觉，在无压力的交互环境中激发自主学习兴趣。</p>
+    </div>
+    
+    <div class="carousel-outer">
+      <!-- Nav Arrows -->
+      <button class="carousel-btn carousel-btn-prev" aria-label="上一张">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button class="carousel-btn carousel-btn-next" aria-label="下一张">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+
+      <!-- Carousel Container (Mockup Device Frame) -->
+      <div class="carousel-container">
+        <!-- Slides Wrapper -->
+        <div class="carousel-wrapper">
+          <div class="carousel-track">
+            <!-- Slide 1 -->
+            <div class="carousel-slide">
+              <img src="images/screenshot-home.png" alt="遇见汉字 - 学习主页" />
+            </div>
+            <!-- Slide 2 -->
+            <div class="carousel-slide">
+              <img src="images/screenshot-story.png" alt="遇见汉字 - 原创绘本馆" />
+            </div>
+            <!-- Slide 3 -->
+            <div class="carousel-slide">
+              <img src="images/screenshot-gallery.png" alt="遇见汉字 - 字词收藏馆" />
+            </div>
+            <!-- Slide 4 -->
+            <div class="carousel-slide">
+              <img src="images/screenshot-admin.png" alt="遇见汉字 - 家长学情控制台" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Caption Container (Below Device Frame) -->
+      <div class="carousel-caption-container">
+        <!-- Caption 1 -->
+        <div class="carousel-caption-item active">
+          <h3>探险大厅：激发学习动力</h3>
+          <p>个性化档案管理，清晰明了的当前掌握数、每日复习倒计时及星级里程碑，每日任务一目了然。</p>
+        </div>
+        <!-- Caption 2 -->
+        <div class="carousel-caption-item">
+          <h3>趣味原创绘本馆：学以致用</h3>
+          <p>字词学习与故事完美结合。新词学习完毕自动解锁精美故事书，支持词语拼音注音与平滑滚动阅读。</p>
+        </div>
+        <!-- Caption 3 -->
+        <div class="carousel-caption-item">
+          <h3>字词收藏馆：随时温故知新</h3>
+          <p>声调色彩编码显示，拼音分类检索。全面收录掌握程度，方便孩子随时进行专项闪卡强化。</p>
+        </div>
+        <!-- Caption 4 -->
+        <div class="carousel-caption-item">
+          <h3>家长学情管理后台：进度一目了然</h3>
+          <p>全透明的数据统计，包括学习曲线、星级明细及绘本开启设置。内置安全PIN防误触设计。</p>
+        </div>
+      </div>
+      
+      <!-- Dots -->
+      <div class="carousel-dots">
+        <button class="carousel-dot active" aria-label="幻灯片 1"></button>
+        <button class="carousel-dot" aria-label="幻灯片 2"></button>
+        <button class="carousel-dot" aria-label="幻灯片 3"></button>
+        <button class="carousel-dot" aria-label="幻灯片 4"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Learning Tiers Section -->
+  <section class="tiers-section">
+    <div class="tiers-container">
+      <h2>科学的分级学习阶梯</h2>
+      <p class="section-desc">系统基于常用汉字字频及部编版低幼教材纲要，合理编排 3000 个核心词汇，精心划分为三大难度梯度。</p>
+      
+      <div class="tiers-grid">
+        <!-- Tier 1 -->
+        <div class="tier-card tier-card-basic">
+          <div class="tier-badge tier-badge-basic">🌱 基础阶段</div>
+          <h3>基础</h3>
+          <p class="tier-subtitle">常用基础字词 · 奠定阅读基石</p>
+          <ul class="tier-meta-list">
+            <li class="tier-meta-item tier-meta-item-basic">
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              收录约 800 个核心常用汉字
+            </li>
+            <li class="tier-meta-item tier-meta-item-basic">
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              推荐 6-7 岁，夯实拼音基础
+            </li>
+            <li class="tier-meta-item tier-meta-item-basic">
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              包含高频双声鼓励间隔，专注力维护
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Tier 2 -->
+        <div class="tier-card tier-card-explore">
+          <div class="tier-badge tier-badge-explore">🔍 探索阶段</div>
+          <h3>探索</h3>
+          <p class="tier-subtitle">丰富拓展词汇 · 享受流畅默读</p>
+          <ul class="tier-meta-list">
+            <li class="tier-meta-item tier-meta-item-explore">
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              收录约 1200 个进阶常用汉字
+            </li>
+            <li class="tier-meta-item tier-meta-item-explore">
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              适合 8-9 岁，建立完整语句结构认知
+            </li>
+            <li class="tier-meta-item tier-meta-item-explore">
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              支持多维度干扰选项判断，强化辨识
+            </li>
+          </ul>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="tier-card tier-card-leap">
+          <div class="tier-badge tier-badge-leap">🚀 飞跃阶段</div>
+          <h3>飞跃</h3>
+          <p class="tier-subtitle">广阔阅读世界 · 无障碍独立阅读</p>
+          <ul class="tier-meta-list">
+            <li class="tier-meta-item tier-meta-item-leap">
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              收录约 1000 个高阶及课外汉字
+            </li>
+            <li class="tier-meta-item tier-meta-item-leap">
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              适合 10 岁以上及学有余力的儿童
+            </li>
+            <li class="tier-meta-item tier-meta-item-leap">
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              引入复杂完形填空，考核高阶语用
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Features Showcase -->
+  <section class="features-section">
+    <div class="showcase-header">
+      <h2>核心设计特色</h2>
+      <p>不仅是一个认字工具，更是符合儿童心理与认知科学的自适应启蒙系统。</p>
+    </div>
+    
+    <div class="features-grid">
+      <!-- Feature 1 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <h3>艾宾浩斯自适应算法</h3>
+        <p>基于先进的 SM-2 记忆算法，针对儿童遗忘规律深度定制：将首次复习间隔调整为更温和的 4 小时，结合响应延迟进行专注度自适应评估，智能调配复习周期，科学提升长期记忆保留率。</p>
+      </div>
+      
+      <!-- Feature 2 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <h3>故事绘本闭环驱动</h3>
+        <p>独创的词汇与绘本高契合度算法。系统会根据当前学习的汉字，推荐包含这些新词的绘本，将孤立的字词带入完整生动的故事语境。通过理解来学习，让阅读成就感成为自主认字的最佳驱动力。</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+        </div>
+        <h3>笔顺交互手写</h3>
+        <p>深度整合字理演变与标准笔顺动画演示。内置田字格动态手写交互，结合拼音色卡辅助（将四声进行色彩编码标识），引导孩子在动手书写与多维感官刺激中，更深刻地感知汉字结构的形体美学。</p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+        </div>
+        <h3>纯本地隐私安全</h3>
+        <p>专为儿童网络安全设计。无服务器上传，无需注册账号或联网绑定，100% 数据均以加密键值缓存形式存储在设备本地（浏览器 IndexedDB），断网亦可流畅使用，最大程度守护孩子和家庭的数字隐私。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links-row">
+        <a href="privacy.html">隐私政策</a>
+        <a href="mailto:samuel.hu@msn.com">反馈</a>
+      </div>
+      <p class="footer-copyright">&copy; 2026 InkEcho Project. 保留所有权利。</p>
+    </div>
+  </footer>
+
+  <!-- Light JavaScript for Screenshot Carousel and Auto Slide -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const track = document.querySelector('.carousel-track');
+      const slides = Array.from(document.querySelectorAll('.carousel-slide'));
+      const dots = Array.from(document.querySelectorAll('.carousel-dot'));
+      const captions = Array.from(document.querySelectorAll('.carousel-caption-item'));
+      const btnPrev = document.querySelector('.carousel-btn-prev');
+      const btnNext = document.querySelector('.carousel-btn-next');
+      const container = document.querySelector('.carousel-outer');
+
+      let currentIndex = 0;
+      let slideInterval;
+
+      // Update slide position, dots, and captions
+      const updateCarousel = (index) => {
+        // Handle boundary indexes
+        if (index < 0) {
+          currentIndex = slides.length - 1;
+        } else if (index >= slides.length) {
+          currentIndex = 0;
+        } else {
+          currentIndex = index;
+        }
+
+        // Apply slide transition
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+        // Update dot states
+        dots.forEach((dot, idx) => {
+          if (idx === currentIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+
+        // Update caption states
+        captions.forEach((caption, idx) => {
+          if (idx === currentIndex) {
+            caption.classList.add('active');
+          } else {
+            caption.classList.remove('active');
+          }
+        });
+      };
+
+      // Set up click events for dots
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          updateCarousel(idx);
+          resetAutoSlide();
+        });
+      });
+
+      // Set up click events for arrows
+      btnPrev.addEventListener('click', () => {
+        updateCarousel(currentIndex - 1);
+        resetAutoSlide();
+      });
+
+      btnNext.addEventListener('click', () => {
+        updateCarousel(currentIndex + 1);
+        resetAutoSlide();
+      });
+
+      // Automatic slides rotation
+      const startAutoSlide = () => {
+        slideInterval = setInterval(() => {
+          updateCarousel(currentIndex + 1);
+        }, 5000);
+      };
+
+      const resetAutoSlide = () => {
+        clearInterval(slideInterval);
+        startAutoSlide();
+      };
+
+      // Pause rotation on hover
+      if (container) {
+        container.addEventListener('mouseenter', () => clearInterval(slideInterval));
+        container.addEventListener('mouseleave', startAutoSlide);
+      }
+
+      // Initialize
+      updateCarousel(0);
+      startAutoSlide();
+    });
+  </script>
+</body>
+</html>
